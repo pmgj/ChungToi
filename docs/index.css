@@ -1,0 +1,48 @@
+caption {
+    text-align: center;
+    font-weight: bold;
+    font-size: xx-large;
+}
+table {
+    margin: 0 auto;
+}
+td {
+    width: 49px;
+    height: 49px;
+    text-align: center;
+    font-family: Verdana, sans-serif;
+    font-size: xx-large;
+    border: 3px solid white;
+}
+img {
+    vertical-align: middle;
+    animation-fill-mode: forwards;
+}
+div {
+    display: grid;
+    grid-template-columns: 50px 200px 50px;
+    width: 300px;
+    margin: 0 auto;
+}
+#pieces1 {
+    grid-row: 1;
+    grid-column: 1;
+}
+#board {
+    grid-row: 1;
+    grid-column: 2;
+}
+#pieces2 {
+    grid-row: 1;
+    grid-column: 3;
+}
+#message, #errors {
+    grid-column: 1 / span 3;
+    text-align: center;
+}
+.selected {
+    border: 3px solid blue;
+}
+.unselected {
+    border: 3px solid black;
+}

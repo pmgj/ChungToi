@@ -1,0 +1,20 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="42" height="42">
+    <style>
+        polygon + polygon { stroke: white; fill: white; }
+        style + polygon { fill: red; }
+    </style>
+    <polygon points="0,12.3 12.3,0 29.7,0 42,12.3 42,29.7 29.7,42 12.3,42 0,29.7" />
+
+    <polygon points="21,21 21,7" />
+    <polygon points="19,7 23,7 21,5" />
+
+    <polygon points="21,21 35,21" />
+    <polygon points="35,19 35,23 37,21" />
+
+    <polygon points="21,21 21,35" />
+    <polygon points="19,35 23,35 21,37" />
+
+    <polygon points="21,21 7,21" />
+    <polygon points="7,19 7,23 5,21" />
+</svg>

@@ -1,9 +1,9 @@
 import CellState from "./CellState.js";
-import Position from "./Position.js";
+import Orientation from "./Orientation.js";
 
 export default class Piece {
-    constructor(p = CellState.EMPTY, po = Position.ORTHOGONAL) {
+    constructor(p = CellState.EMPTY, o = Orientation.ORTHOGONAL) {
         this.player = p;
-        this.position = po;
+        this.orientation = o;
     }
 }

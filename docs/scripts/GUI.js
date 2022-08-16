@@ -2,118 +2,125 @@ import ChungToi from "./ChungToi.js";
 import Cell from "./Cell.js";
 import Player from "./Player.js";
 
-function GUI() {
-    let game = new ChungToi();
-    let origin, choosePosition = false;
-    function coordinates(cell) {
+class GUI {
+    constructor() {
+        this.game = new ChungToi();
+        this.origin = null;
+        this.choosePosition = false;    
+    }
+    coordinates(cell) {
         return new Cell(cell.parentNode.rowIndex, cell.cellIndex);
     }
-    function setErrors(message) {
+    setErrors(message) {
         let msg = document.getElementById("errors");
         msg.textContent = message;
     }
-    function setMessage(message) {
+    setMessage(message) {
         let msg = document.getElementById("message");
         msg.textContent = message;
-        setErrors("");
+        this.setErrors("");
     }
-    function changeMessage(m) {
+    changeMessage(m) {
         let objs = { PLAYER2: "Blue's win!", PLAYER1: "Red's win!" };
         if (objs[m]) {
-            setMessage(`Game Over! ${objs[m]}`);
-            disableMoves();
+            this.setMessage(`Game Over! ${objs[m]}`);
+            this.disableMoves();
         } else {
             let msgs = { PLAYER1: "Red's turn.", PLAYER2: "Blue's turn." };
-            setMessage(msgs[game.getTurn()]);
+            this.setMessage(msgs[this.game.getTurn()]);
         }
     }
-    function disableMoves() {
+    disableMoves() {
         let cells = document.querySelectorAll("#board td");
         cells.forEach(c => {
             c.onclick = undefined;
             c.oncontextmenu = undefined;
         });
     }
-    function enableMoves() {
+    enableMoves() {
         let cells = document.querySelectorAll("#board td");
-        cells.forEach(c => c.onclick = move);
+        cells.forEach(c => c.onclick = this.move.bind(this));
     }
-    function move() {
+    move(evt) {
+        let td = evt.target;
         try {
-            if (choosePosition) {
-                if (this.firstChild) {
-                    choosePosition = false;
-                    game.changeTurn();
-                    changeMessage();
+            if (this.choosePosition) {
+                if (td.firstChild) {
+                    this.choosePosition = false;
+                    this.game.changeTurn();
+                    this.changeMessage();
                 }
             } else if (origin) {
-                origin.className = "unselected";
-                let w = game.move(coordinates(origin), coordinates(this));
-                changeMessage(w);
-                this.appendChild(origin.firstChild);
-                choosePosition = true;
-                origin = null;
+                this.origin.className = "unselected";
+                let w = this.game.move(this.coordinates(this.origin), this.coordinates(td));
+                this.changeMessage(w);
+                td.appendChild(this.origin.firstChild);
+                this.choosePosition = true;
+                this.origin = null;
             } else {
-                origin = this;
-                origin.className = "selected";
-                choosePosition = false;
+                this.origin = this;
+                this.origin.className = "selected";
+                this.choosePosition = false;
             }
         } catch (ex) {
-            setErrors(ex.message);
-            origin = null;
+            this.setErrors(ex.message);
+            this.origin = null;
         }
     }
-    function play() {
+    play(evt) {
+        let td = evt.currentTarget;
         try {
-            if (origin) {
-                let w = game.position(coordinates(this), origin.firstChild.player);
-                this.appendChild(origin.firstChild);
-                changeMessage(w);
-                origin.className = "";
-                origin = null;
-                choosePosition = true;
-            } else if (choosePosition && this.firstChild) {
-                game.changeTurn();
-                changeMessage();
-                startMovingPieces();
-                choosePosition = false;
+            if (this.origin) {
+                let w = this.game.position(this.coordinates(td), this.origin.firstChild.player);
+                td.appendChild(this.origin.firstChild);
+                this.changeMessage(w);
+                this.origin.className = "";
+                this.origin = null;
+                this.choosePosition = true;
+            } else if (this.choosePosition && td.firstChild) {
+                this.game.changeTurn();
+                this.changeMessage();
+                this.startMovingPieces();
+                this.choosePosition = false;
             }
         } catch (ex) {
-            setErrors(ex.message);
+            this.setErrors(ex.message);
         }
     }
-    function startMovingPieces() {
+    startMovingPieces() {
         let pieces1 = document.querySelectorAll("#pieces1 img");
         let pieces2 = document.querySelectorAll("#pieces2 img");
         if (pieces1.length === 0 && pieces2.length === 0) {
-            enableMoves();
+            this.enableMoves();
         }
     }
-    function select() {
-        if (this === origin) {
-            origin.className = "";
-            origin = null;
+    select(evt) {
+        let td = evt.currentTarget;
+        if (td === this.origin) {
+            this.origin.className = "";
+            this.origin = null;
         } else {
-            clearSelectedPieces();
-            origin = this;
-            choosePosition = false;
-            origin.className = "selected";
-            setErrors("");
+            this.clearSelectedPieces();
+            this.origin = td;
+            this.choosePosition = false;
+            this.origin.className = "selected";
+            this.setErrors("");
         }
     }
-    function clearSelectedPieces() {
+    clearSelectedPieces() {
         let pieces1 = document.querySelectorAll("#pieces1 td");
         pieces1.forEach(p => p.className = "");
         let pieces2 = document.querySelectorAll("#pieces2 td");
         pieces2.forEach(p => p.className = "");
     }
-    function rotate(evt) {
+    rotate(evt) {
         evt.preventDefault();
         try {
-            let img = this.firstChild;
+            let td = evt.currentTarget;
+            let img = td.firstChild;
             if (img) {
-                game.rotate(coordinates(this));
-                choosePosition = false;
+                this.game.rotate(this.coordinates(td));
+                this.choosePosition = false;
                 if (img.style.transform === "rotate(45deg)") {
                     let anim = img.animate([{ transform: 'rotate(45deg)' }, { transform: 'rotate(0)' }], 1000);
                     anim.onfinish = () => img.style.transform = "rotate(0)";
@@ -121,15 +128,15 @@ function GUI() {
                     let anim = img.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(45deg)' }], 1000);
                     anim.onfinish = () => img.style.transform = "rotate(45deg)";
                 }
-                startMovingPieces();
+                this.startMovingPieces();
             }
-            changeMessage();
+            this.changeMessage();
         } catch (ex) {
-            setErrors(ex.message);
+            this.setErrors(ex.message);
         }
     }
-    function init() {
-        let board = game.getBoard();
+    init() {
+        let board = this.game.getBoard();
         let add = n => {
             let tbody = document.querySelector(`#pieces${n} tbody`);
             let tr = document.createElement("tr");
@@ -138,7 +145,7 @@ function GUI() {
             img.src = `images/Piece${n}.svg`;
             img.player = n === 1 ? Player.PLAYER1 : Player.PLAYER2;
             td.appendChild(img);
-            td.onclick = select;
+            td.onclick = this.select.bind(this);
             tr.appendChild(td);
             tbody.appendChild(tr);
         };
@@ -148,8 +155,8 @@ function GUI() {
             for (let j = 0; j < board[0].length; j++) {
                 let td = document.createElement("td");
                 td.className = "unselected";
-                td.onclick = play;
-                td.oncontextmenu = rotate;
+                td.onclick = this.play.bind(this);
+                td.oncontextmenu = this.rotate.bind(this);
                 tr.appendChild(td);
             }
             tbody.appendChild(tr);
@@ -157,9 +164,8 @@ function GUI() {
             add(2);
         }
         document.oncontextmenu = evt => evt.preventDefault();
-        changeMessage();
+        this.changeMessage();
     }
-    return { init };
 }
 let gui = new GUI();
 gui.init();

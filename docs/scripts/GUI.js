@@ -42,7 +42,7 @@ class GUI {
         cells.forEach(c => c.onclick = this.move.bind(this));
     }
     move(evt) {
-        let td = evt.target;
+        let td = evt.currentTarget;
         try {
             if (this.choosePosition) {
                 if (td.firstChild) {
@@ -50,7 +50,7 @@ class GUI {
                     this.game.changeTurn();
                     this.changeMessage();
                 }
-            } else if (origin) {
+            } else if (this.origin) {
                 this.origin.className = "unselected";
                 let w = this.game.move(this.coordinates(this.origin), this.coordinates(td));
                 this.changeMessage(w);
@@ -58,7 +58,7 @@ class GUI {
                 this.choosePosition = true;
                 this.origin = null;
             } else {
-                this.origin = this;
+                this.origin = td;
                 this.origin.className = "selected";
                 this.choosePosition = false;
             }

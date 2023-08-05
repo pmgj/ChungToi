@@ -9,7 +9,7 @@ public abstract class State {
     }
 
     public void rotate(Cell cell) {
-        int x = cell.getX(), y = cell.getY();
+        int x = cell.x(), y = cell.y();
         Piece piece = this.game.getBoard()[x][y];
         if ((this.game.getTurn() == Player.PLAYER1 && piece.getPlayer() != CellState.PLAYER1) || (this.game.getTurn() == Player.PLAYER2 && piece.getPlayer() != CellState.PLAYER2)) {
             throw new Error("You can't rotate an opponent's piece.");

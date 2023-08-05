@@ -20,16 +20,15 @@ public class MoveState extends State {
             throw new Error("End parameter must not be null.");
         }
         Piece[][] board = this.game.getBoard();
-        int or = beginCell.getX(), oc = beginCell.getY();
+        int or = beginCell.x(), oc = beginCell.y();
         Piece beginPiece = board[or][oc];
         if (beginPiece.getPlayer() == CellState.EMPTY) {
             throw new Error("Origin cell must not be empty.");
         }
-//        if (beginPiece.getPlayer() != this.game.getTurn()) {
         if ((this.game.getTurn() == Player.PLAYER1 && beginPiece.getPlayer() != CellState.PLAYER1) || (this.game.getTurn() == Player.PLAYER2 && beginPiece.getPlayer() != CellState.PLAYER2)) {
           throw new Error("It's not your turn.");
         }
-        int dr = endCell.getX(), dc = endCell.getY();
+        int dr = endCell.x(), dc = endCell.y();
         if (board[dr][dc].getPlayer() != CellState.EMPTY) {
             throw new Error("Destination cell must be empty.");
         }

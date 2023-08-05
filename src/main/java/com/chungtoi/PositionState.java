@@ -11,7 +11,7 @@ public class PositionState extends State {
         if (this.game.getTurn() != player) {
             throw new Error("It's not your turn.");
         }
-        int x = cell.getX(), y = cell.getY();
+        int x = cell.x(), y = cell.y();
         if (this.game.getBoard()[x][y].getPlayer() != CellState.EMPTY) {
             throw new Error("Cell must be empty.");
         }
